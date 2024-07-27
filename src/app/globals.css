@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  color: rgb(var(--text-color-primary));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+a {
+  color: var(--color-gold);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eff0f4;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+
+@layer base {
+  :root {
+    --background-start-rgb: 255, 255, 255;
+    --background-end-rgb: 255, 255, 255;
+
+    --text-color-primary: 51, 51, 51, 1;
+    --text-color-secondary: 149, 146, 167;
+
+    --color-gold: #d4af37;
+  }
+
+  @media (prefers-color-scheme: dark) {
+  }
+}
