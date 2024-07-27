@@ -21,7 +21,7 @@ export type LaureateBasic = {
   links: ItemLinks[]
 }
 
-export type NobelPrize = {
+export interface NobelPrize {
   awardYear: string
   category: Translation
   categoryFullName: Translation
@@ -32,13 +32,49 @@ export type NobelPrize = {
   laureates: LaureateBasic[]
 }
 
-export type Laureate = {
+export interface NobelPrizePerLaureate extends NobelPrize {
+  sortOrder: '1' | '2' | '3'
+  portion: '1' | '1/2' | '1/3' | '1/4'
+  prizeStatus: 'received' | 'declined' | 'restricted'
+  motivation: Translation
+}
+
+export type Event = {
+  date: string
+  place: Location
+}
+
+export type Location = {
+  city: Translation
+  country: Translation
+}
+
+interface LaureateCommon {
   id: string
-  laureateIfPerson: string
-  laureateIfOrg: string
   wikipedia: string
-  wikidata: string
+  wikidata: {
+    id: string
+    url: string
+  }
   sameAs: string
   links: string
-  nobelPrizes: string
+  nobelPrizes: NobelPrizePerLaureate[]
 }
+
+export interface LaureatePerson extends LaureateCommon {
+  knownName: Translation
+  givenName: Translation
+  familyName: Translation
+  fullName: Translation
+  birth: Event
+  death: Event
+}
+
+export interface LaureateOrg extends LaureateCommon {
+  orgName: Translation
+  nativeName: string
+  acronym: string
+  founded: Event
+}
+
+type Laureate = LaureatePerson | LaureateOrg

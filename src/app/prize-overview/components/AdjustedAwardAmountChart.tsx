@@ -1,5 +1,5 @@
 'use client'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { Line } from 'react-chartjs-2'
 import {
   Chart,
@@ -14,6 +14,7 @@ import {
   Legend,
 } from 'chart.js'
 import { NobelPrize } from '@/types'
+import { useModal } from '@/hooks'
 import { PrizeDetailsModal } from './PrizeDetailsModal'
 
 Chart.register(
@@ -31,16 +32,12 @@ interface Props {
 }
 
 export const AdjustedAwardAmountChart: FC<Props> = ({ data }) => {
-  const [modalIsOpen, setModalIsOpen] = useState(false)
-  const [modalData, setModalData] = useState<any>(null)
+  const { modalData, setModalData, modalIsOpen, setModalIsOpen, onCloseModal } =
+    useModal()
+
   const onYearClick = (elementIndex: number) => {
     setModalIsOpen(true)
     setModalData(data[elementIndex])
-  }
-
-  const onCloseModal = () => {
-    setModalData(null)
-    setModalIsOpen(false)
   }
 
   const chartData: ChartData<'line'> = {

@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react'
+import { FC, PropsWithChildren } from 'react'
 import { CloseButton, Dialog, DialogPanel, Transition } from '@headlessui/react'
 
 export interface ModalProps {
@@ -7,12 +7,12 @@ export interface ModalProps {
   title: string
 }
 
-export const Modal = ({
+export const Modal: FC<PropsWithChildren<ModalProps>> = ({
   isOpen,
   close,
   children,
   title,
-}: PropsWithChildren<ModalProps>) => {
+}) => {
   return (
     <>
       <Transition

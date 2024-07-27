@@ -1,0 +1,1 @@
+export { LaureatesUi } from './LaureatesUi'

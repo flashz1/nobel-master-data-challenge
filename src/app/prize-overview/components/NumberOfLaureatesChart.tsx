@@ -3,6 +3,8 @@ import { FC } from 'react'
 import { Line } from 'react-chartjs-2'
 import {
   Chart,
+  ChartData,
+  ChartOptions,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -22,13 +24,23 @@ Chart.register(
   Legend
 )
 import { NobelPrize } from '@/types'
+import { useModal } from '@/hooks'
+import { LaureatesDetailsModal } from './LaureatesDetailsModal'
 
 interface Props {
   data: NobelPrize[]
 }
 
 export const NumberOfLaureatesChart: FC<Props> = ({ data }) => {
-  const chartData = {
+  const { modalData, setModalData, modalIsOpen, setModalIsOpen, onCloseModal } =
+    useModal()
+
+  const onYearClick = (elementIndex: number) => {
+    setModalIsOpen(true)
+    setModalData(data[elementIndex])
+  }
+
+  const chartData: ChartData<'line'> = {
     labels: data.map((item) => item.awardYear),
     datasets: [
       {
@@ -40,5 +52,24 @@ export const NumberOfLaureatesChart: FC<Props> = ({ data }) => {
     ],
   }
 
-  return <Line data={chartData} />
+  const options: ChartOptions<'line'> = {
+    onClick: (event: any, elements: any) => {
+      if (elements.length > 0) {
+        const elementIndex = elements[0].index
+        onYearClick(elementIndex)
+      }
+    },
+  }
+
+  return (
+    <>
+      <Line data={chartData} options={options} />
+      <LaureatesDetailsModal
+        isOpen={modalIsOpen}
+        close={onCloseModal}
+        data={modalData}
+        title="Laureates Overview"
+      />
+    </>
+  )
 }
