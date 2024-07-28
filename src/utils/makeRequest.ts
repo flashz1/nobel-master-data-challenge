@@ -17,6 +17,7 @@ export const makeRequest = async <T>(
   }
 
   const res = await fetch(url, {
+    next: { revalidate: 3600 },
     ...options,
     headers,
   })

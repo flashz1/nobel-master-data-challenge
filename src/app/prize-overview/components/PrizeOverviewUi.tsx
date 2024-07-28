@@ -7,14 +7,16 @@ import {
   AwardsByCategoryChart,
   NumberOfLaureatesChart,
 } from '.'
-import { NobelPrize } from '@/types'
+import { NobelPrize, NobelPrizesMeta } from '@/types'
 import { Box } from '@/components/Box'
 
 interface NobelPrizesResponse {
   nobelPrizes: NobelPrize[]
+  meta: NobelPrizesMeta
 }
 
 const YEARS = Array.from({ length: 2024 - 1901 + 1 }, (v, i) => i + 1901)
+const LIMIT = 100
 
 export const PrizeOverviewUi = () => {
   const [data, setData] = useState<NobelPrize[]>([])
@@ -23,12 +25,38 @@ export const PrizeOverviewUi = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await makeRequest<NobelPrizesResponse>(
-        `/nobelPrizes?nobelPrizeYear=${prizeYear}&yearTo=${yearTo}`
+      let data: NobelPrize[] = []
+      const { data: fetchedData } = await makeRequest<NobelPrizesResponse>(
+        `/nobelPrizes?nobelPrizeYear=${prizeYear}&yearTo=${yearTo}&limit=${LIMIT}`
       )
 
-      if (data) {
-        setData(data.nobelPrizes)
+      if (fetchedData) {
+        data = [...data, ...fetchedData.nobelPrizes]
+        const totalPages = Math.ceil(
+          fetchedData.meta.count / fetchedData.meta.limit
+        )
+        const currentPage = fetchedData.meta.offset / fetchedData.meta.limit
+        const remainingRequests = totalPages - currentPage - 1
+
+        const promises = []
+
+        for (let i = 1; i <= remainingRequests; i++) {
+          const offset = i * LIMIT
+
+          promises.push(
+            makeRequest<NobelPrizesResponse>(
+              `/nobelPrizes?nobelPrizeYear=${prizeYear}&yearTo=${yearTo}&limit=${LIMIT}&offset=${offset}`
+            )
+          )
+        }
+
+        const offsetData = await Promise.all(promises)
+
+        offsetData.forEach((od) => {
+          data = [...data, ...(od.data ? od.data.nobelPrizes : [])]
+        })
+
+        setData(data)
       }
     }
 

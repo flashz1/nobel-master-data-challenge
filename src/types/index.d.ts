@@ -32,6 +32,15 @@ export interface NobelPrize {
   laureates: LaureateBasic[]
 }
 
+export interface NobelPrizesMeta {
+  offset: number
+  limit: number
+  nobelPrizeYear: number
+  yearTo: number
+  nobelPrizeCategory: string
+  count: number
+}
+
 export interface NobelPrizePerLaureate extends NobelPrize {
   sortOrder: '1' | '2' | '3'
   portion: '1' | '1/2' | '1/3' | '1/4'
