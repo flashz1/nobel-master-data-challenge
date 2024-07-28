@@ -24,7 +24,7 @@ export const PrizeDetailsModal: FC<Props> = ({
           <div>Prize Amount Adjusted: {data.prizeAmountAdjusted}</div>
           <div className="flex space-x-4">
             <span>Laureates:</span>
-            {data.laureates.map((l) => l.knownName?.en || '-').join(', ')}
+            {data.laureates?.map((l) => l.knownName?.en || '-').join(', ')}
           </div>
         </>
       ) : (

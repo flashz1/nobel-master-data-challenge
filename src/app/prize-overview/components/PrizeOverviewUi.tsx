@@ -69,7 +69,7 @@ export const PrizeOverviewUi = () => {
         <div className="w-full md:w-1/2">
           <Box title="Adjusted award amount of award over the years as time series">
             {data.length ? (
-              <AdjustedAwardAmountChart data={data || []} />
+              <AdjustedAwardAmountChart data={data} />
             ) : (
               'No data.'
             )}
@@ -77,20 +77,12 @@ export const PrizeOverviewUi = () => {
         </div>
         <div className="w-full md:w-1/2">
           <Box title="Number of laureates over the years as time series">
-            {data.length ? (
-              <NumberOfLaureatesChart data={data || []} />
-            ) : (
-              'No data.'
-            )}
+            {data.length ? <NumberOfLaureatesChart data={data} /> : 'No data.'}
           </Box>
         </div>
         <div className="w-full md:w-1/2 flex justify-center">
           <Box title="Number of awards by category as a pie chart">
-            {data.length ? (
-              <AwardsByCategoryChart data={data || []} />
-            ) : (
-              'No data.'
-            )}
+            {data.length ? <AwardsByCategoryChart data={data} /> : 'No data.'}
           </Box>
         </div>
       </div>

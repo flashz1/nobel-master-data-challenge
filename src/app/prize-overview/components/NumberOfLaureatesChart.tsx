@@ -45,7 +45,7 @@ export const NumberOfLaureatesChart: FC<Props> = ({ data }) => {
     datasets: [
       {
         label: 'Number of Laureates',
-        data: data.map((item) => item.laureates.length),
+        data: data.map((item) => item.laureates?.length),
         borderColor: 'rgba(153, 102, 255, 1)',
         backgroundColor: 'rgba(153, 102, 255, 0.2)',
       },

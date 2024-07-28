@@ -17,7 +17,7 @@ export const LaureatesDetailsModal: FC<Props> = ({
     <Modal isOpen={isOpen} close={close} title={title}>
       <div className="text-2xl mb-8">{`${data?.awardYear} | ${data?.category.en}`}</div>
       {data
-        ? data.laureates.map((l, index) => (
+        ? data.laureates?.map((l, index) => (
             <div key={index} className="flex flex-col pb-8 mb-8 border-b-2">
               <div>Full Name: {l.fullName?.en || '-'}</div>
               <div>Known Name: {l.knownName?.en || '-'}</div>
