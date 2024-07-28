@@ -59,6 +59,15 @@ export const NumberOfLaureatesChart: FC<Props> = ({ data }) => {
         onYearClick(elementIndex)
       }
     },
+    scales: {
+      x: {
+        type: 'category',
+        title: {
+          display: true,
+          text: 'Year',
+        },
+      },
+    },
   }
 
   return (
