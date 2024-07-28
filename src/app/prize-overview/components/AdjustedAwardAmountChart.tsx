@@ -31,21 +31,48 @@ interface Props {
   data: NobelPrize[]
 }
 
+type AggregatedData = {
+  [key: string]: AggregatedDataItem
+}
+
+type AggregatedDataItem = { totalPrizeAmount: number; count: number }
+
 export const AdjustedAwardAmountChart: FC<Props> = ({ data }) => {
   const { modalData, setModalData, modalIsOpen, setModalIsOpen, onCloseModal } =
     useModal()
 
+  const aggregatedData: AggregatedData = data.reduce(
+    (acc: AggregatedData, item) => {
+      const year = item.awardYear
+
+      if (!acc[year]) {
+        acc[year] = { totalPrizeAmount: 0, count: 0 }
+      }
+
+      acc[year].totalPrizeAmount += item.prizeAmountAdjusted
+      acc[year].count += 1
+
+      return acc
+    },
+    {}
+  )
+
+  const years = Object.keys(aggregatedData)
+  const prizeAmounts = years.map(
+    (year) => aggregatedData[year].totalPrizeAmount / aggregatedData[year].count
+  )
+
   const onYearClick = (elementIndex: number) => {
     setModalIsOpen(true)
-    setModalData(data[elementIndex])
+    setModalData(data.filter((item) => item.awardYear === years[elementIndex]))
   }
 
   const chartData: ChartData<'line'> = {
-    labels: data.map((item) => item.awardYear),
+    labels: years,
     datasets: [
       {
         label: 'Adjusted Award Amount Chart',
-        data: data.map((item) => item.prizeAmountAdjusted),
+        data: prizeAmounts,
         borderColor: 'rgba(75,192,192,1)',
         borderWidth: 2,
         fill: false,

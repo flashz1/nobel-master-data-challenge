@@ -4,7 +4,7 @@ import { ModalProps } from '@/components/Modal'
 import { NobelPrize } from '@/types'
 
 interface Props extends ModalProps {
-  data: NobelPrize | null
+  data: NobelPrize[] | null
 }
 
 export const PrizeDetailsModal: FC<Props> = ({
@@ -15,21 +15,25 @@ export const PrizeDetailsModal: FC<Props> = ({
 }) => {
   return (
     <Modal isOpen={isOpen} close={close} title={title}>
-      {data ? (
-        <>
-          <div>Award Year: {data.awardYear}</div>
-          <div>Category: {data.categoryFullName?.en || '-'}</div>
-          <div>Date Awarded: {data.dateAwarded}</div>
-          <div>Prize Amount: {data.prizeAmount}</div>
-          <div>Prize Amount Adjusted: {data.prizeAmountAdjusted}</div>
-          <div className="flex space-x-4">
-            <span>Laureates:</span>
-            {data.laureates?.map((l) => l.knownName?.en || '-').join(', ')}
-          </div>
-        </>
-      ) : (
-        'Loading...'
-      )}
+      <div className="max-h-[500px] overflow-y-auto">
+        {data
+          ? data.map((item, index) => (
+              <div key={index} className="flex flex-col pb-8 mb-8 border-b-2">
+                <div>Award Year: {item.awardYear}</div>
+                <div>Category: {item.categoryFullName?.en || '-'}</div>
+                <div>Date Awarded: {item.dateAwarded}</div>
+                <div>Prize Amount: {item.prizeAmount}</div>
+                <div>Prize Amount Adjusted: {item.prizeAmountAdjusted}</div>
+                <div className="flex space-x-4">
+                  <span>Laureates:</span>
+                  {item.laureates
+                    ?.map((l) => l.knownName?.en || '-')
+                    .join(', ')}
+                </div>
+              </div>
+            ))
+          : 'Loading...'}
+      </div>
     </Modal>
   )
 }

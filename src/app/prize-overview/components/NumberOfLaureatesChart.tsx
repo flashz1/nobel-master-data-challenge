@@ -31,21 +31,45 @@ interface Props {
   data: NobelPrize[]
 }
 
+type AggregatedData = {
+  [key: string]: AggregatedDataItem
+}
+
+type AggregatedDataItem = { count: number }
+
 export const NumberOfLaureatesChart: FC<Props> = ({ data }) => {
   const { modalData, setModalData, modalIsOpen, setModalIsOpen, onCloseModal } =
     useModal()
 
+  const aggregatedData: AggregatedData = data.reduce(
+    (acc: AggregatedData, item) => {
+      const year = item.awardYear
+
+      if (!acc[year]) {
+        acc[year] = { count: 0 }
+      }
+
+      acc[year].count += item.laureates?.length || 0
+
+      return acc
+    },
+    {}
+  )
+
+  const years = Object.keys(aggregatedData)
+  const laureatesCount = years.map((year) => aggregatedData[year].count)
+
   const onYearClick = (elementIndex: number) => {
     setModalIsOpen(true)
-    setModalData(data[elementIndex])
+    setModalData(data.filter((item) => item.awardYear === years[elementIndex]))
   }
 
   const chartData: ChartData<'line'> = {
-    labels: data.map((item) => item.awardYear),
+    labels: years,
     datasets: [
       {
         label: 'Number of Laureates',
-        data: data.map((item) => item.laureates?.length),
+        data: laureatesCount,
         borderColor: 'rgba(153, 102, 255, 1)',
         backgroundColor: 'rgba(153, 102, 255, 0.2)',
       },
